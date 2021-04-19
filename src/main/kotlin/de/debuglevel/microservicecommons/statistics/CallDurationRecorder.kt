@@ -7,7 +7,9 @@ import kotlin.time.ExperimentalTime
 object CallDurationRecorder {
     private val logger = KotlinLogging.logger {}
 
-    private val callDurations = mutableMapOf<Pair<Any, Any?>, CallDuration>()
+    private val _callDurations = mutableMapOf<Pair<Any, Any?>, CallDuration>()
+    val callDurations: Map<Pair<Any, Any?>, CallDuration>
+        get() = _callDurations
 
     /**
      * Records a call [duration] from a [caller] (e.g. a class instance, but can be anything)
