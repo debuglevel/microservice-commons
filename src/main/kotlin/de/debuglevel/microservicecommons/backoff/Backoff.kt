@@ -57,7 +57,7 @@ abstract class Backoff {
      * @param maximumBackoffDuration The maximum duration to backoff (to prevent very large backoff durations) or null to allow infinite backoff durations.
      * @param randomSeed A seed for calculating a random part of the duration (should be tied to an item and only change when the item is modified, i.e. hashcode is a good choice); null to disable random part in duration.
      */
-    fun getBackoffDuration(
+    private fun getBackoffDuration(
         failedAttempts: Long,
         multiplierDuration: Duration,
         maximumBackoffDuration: Duration?,
