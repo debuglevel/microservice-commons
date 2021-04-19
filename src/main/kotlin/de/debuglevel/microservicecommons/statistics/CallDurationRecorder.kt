@@ -22,7 +22,13 @@ object CallDurationRecorder {
         logger.trace { "Recording call duration..." }
 
         val key = Pair(caller, scope)
-        val callDuration = callDurations[key] ?: CallDuration(caller, scope)
+        val callDuration = if (callDurations.contains(key)) {
+            callDurations.getValue(key)
+        } else {
+            val callDuration = CallDuration(caller, scope)
+            _callDurations[key] = callDuration
+            callDuration
+        }
 
         val oldDurationSum = callDuration.durationSum
         callDuration.durationSum = when (oldDurationSum) {
