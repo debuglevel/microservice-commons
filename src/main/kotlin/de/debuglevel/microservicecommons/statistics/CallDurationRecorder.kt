@@ -4,7 +4,7 @@ import mu.KotlinLogging
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
-object CallDurationUtils {
+object CallDurationRecorder {
     private val logger = KotlinLogging.logger {}
 
     private val callDurations = mutableMapOf<Pair<Any, Any?>, CallDuration>()
