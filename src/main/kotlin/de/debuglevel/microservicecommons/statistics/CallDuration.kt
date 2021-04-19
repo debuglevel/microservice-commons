@@ -8,7 +8,7 @@ package de.debuglevel.microservicecommons.statistics
  */
 data class CallDuration(
     val caller: Any,
-    val scope: Any,
+    val scope: Any?,
     var calls: Int = 0,
     var durationSum: Double? = null,
 ) {

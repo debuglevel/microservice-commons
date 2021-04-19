@@ -7,7 +7,7 @@ import kotlin.time.ExperimentalTime
 object CallDurationUtils {
     private val logger = KotlinLogging.logger {}
 
-    private val callDurations = mutableSetOf<CallDuration>()
+    private val callDurations = mutableMapOf<Pair<Any, Any?>, CallDuration>()
 
     /**
      * Records a call [duration] from a [caller] (e.g. a class instance, but can be anything)
@@ -16,11 +16,11 @@ object CallDurationUtils {
      * and returns the summarizing [CallDuration] object.
      */
     @ExperimentalTime
-    fun record(caller: Any, scope: Any, duration: Duration): CallDuration {
+    fun record(caller: Any, scope: Any?, duration: Duration): CallDuration {
         logger.trace { "Recording call duration..." }
 
-        val callDuration = callDurations.firstOrNull { it.caller == caller && it.scope == scope }
-            ?: CallDuration(caller, scope)
+        val key = Pair(caller, scope)
+        val callDuration = callDurations[key] ?: CallDuration(caller, scope)
 
         val oldDurationSum = callDuration.durationSum
         callDuration.durationSum = when (oldDurationSum) {
