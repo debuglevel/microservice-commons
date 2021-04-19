@@ -16,4 +16,24 @@ data class CallDuration(
         get() {
             return durationSum?.div(calls)
         }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CallDuration
+
+        if (caller != other.caller) return false
+        if (scope != other.scope) return false
+        if (calls != other.calls) return false
+        if (durationSum != other.durationSum) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = caller.hashCode()
+        result = 31 * result + scope.hashCode()
+        return result
+    }
 }
