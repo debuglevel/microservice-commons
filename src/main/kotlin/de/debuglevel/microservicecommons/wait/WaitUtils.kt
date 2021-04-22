@@ -57,7 +57,7 @@ object WaitUtils {
      * This should be called right after the call was finished.
      * @param caller The object which executes the call
      */
-    fun setLastRequestDateTime(caller: Any) {
+    fun setLastCallDateTime(caller: Any) {
         lastCalls[caller] = LocalDateTime.now()
     }
 }
