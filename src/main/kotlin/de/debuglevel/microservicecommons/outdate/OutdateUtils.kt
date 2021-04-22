@@ -7,7 +7,13 @@ import java.time.LocalDateTime
 object OutdateUtils {
     private val logger = KotlinLogging.logger {}
 
-    fun isOutdated(lastSuccessfulAttempt: LocalDateTime?, outdatingInterval: Duration): Boolean {
+    /**
+     * Checks if an item is outdated, based on the [lastSuccessfulAttempt] (if null, returns true) and an [outdatingInterval].
+     */
+    fun isOutdated(
+        lastSuccessfulAttempt: LocalDateTime?,
+        outdatingInterval: Duration
+    ): Boolean {
         logger.trace { "Checking if is outdated (outdating-interval=$outdatingInterval)..." }
 
         val outdated = when {

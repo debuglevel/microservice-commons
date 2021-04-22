@@ -9,16 +9,22 @@ object DurationRandomizer {
     private val logger = KotlinLogging.logger {}
 
     /**
-     * Get a random duration
+     * Randomize a [duration] within a [maximumDifference].
      * @param duration The original duration to add some randomness to
-     * @param maximumDifference The maximum difference to multiply to the duration
+     * @param maximumDifference The maximum difference to multiply to the duration; must be non-negative
      *
-     * maximumDifference = 0.25 and duration = 1m result in a range from 0.75m to 1.25m
+     * maximumDifference = 0.25 and duration = 1min result in a range from 0.75min to 1.25min
      *
-     * @param randomSeed A seed to base the randomness on (should be tied to an item and only change when the item is modified, i.e. hashcode is a good choice); null to use a non-deterministic random number generator.
+     * @param randomSeed A seed to base the randomness on (should be tied to an item and only change when the item is modified, i.e. hashcode is a bad choice); null to use a non-deterministic random number generator.
      */
-    fun randomizeDuration(duration: Duration, maximumDifference: Double, randomSeed: Int? = null): Duration {
+    fun randomizeDuration(
+        duration: Duration,
+        maximumDifference: Double,
+        randomSeed: Int? = null,
+    ): Duration {
+        require(maximumDifference >= 0) { "Maximum difference must be non-negative." }
         logger.trace { "Randomizing duration $duration (maximumDifference=$maximumDifference)..." }
+
         val random = if (randomSeed != null) {
             logger.trace { "Using seed=$randomSeed..." }
             Random(randomSeed)

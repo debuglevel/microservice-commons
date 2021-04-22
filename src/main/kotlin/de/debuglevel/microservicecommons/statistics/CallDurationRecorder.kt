@@ -18,7 +18,12 @@ object CallDurationRecorder {
      * and returns the summarizing [CallDuration] object.
      */
     @ExperimentalTime
-    fun record(caller: Any, scope: Any?, duration: Duration): CallDuration {
+    fun record(
+        caller: Any,
+        scope: Any?,
+        duration: Duration
+    ): CallDuration {
+        require(!duration.isNegative()) { "Duration must be non-negative." }
         logger.trace { "Recording call duration..." }
 
         val key = Pair(caller, scope)

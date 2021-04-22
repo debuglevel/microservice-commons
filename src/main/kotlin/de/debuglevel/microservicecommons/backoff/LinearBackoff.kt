@@ -7,7 +7,7 @@ object LinearBackoff : Backoff() {
     private val logger = KotlinLogging.logger {}
 
     /**
-     * Gets the duration until the next attempt, based on the number of previous failed attempts.
+     * Gets the duration until the next attempt, based on the number of previous [failedAttempts].
      * @param failedAttempts How many failed attempts were made so far.
      * @param multiplierDuration Which duration should be added for each failed attempt.
      */

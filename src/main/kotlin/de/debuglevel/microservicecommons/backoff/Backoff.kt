@@ -13,7 +13,7 @@ abstract class Backoff {
     private val maximumRandomDifference = 0.25
 
     /**
-     * Checks whether the backoff duration is reached.
+     * Checks whether the backoff duration (since [lastAttemptOn]) is reached.
      * @param lastAttemptOn When the last attempt was made; null if never.
      * @param failedAttempts How many failed attempts were made so far.
      * @param multiplierDuration Which duration should be added for each failed attempt.
@@ -51,7 +51,7 @@ abstract class Backoff {
     }
 
     /**
-     * Gets the duration until the next attempt, based on the number of previous failed attempts.
+     * Gets the duration until the next attempt, based on the number of previous [failedAttempts].
      * @param failedAttempts How many failed attempts were made so far.
      * @param multiplierDuration Which duration should be added for each failed attempt.
      * @param maximumBackoffDuration The maximum duration to backoff (to prevent very large backoff durations) or null to allow infinite backoff durations.
@@ -87,7 +87,7 @@ abstract class Backoff {
     }
 
     /**
-     * Gets the duration until the next attempt, based on the number of previous failed attempts.
+     * Gets the duration until the next attempt, based on the number of previous [failedAttempts].
      * @param failedAttempts How many failed attempts were made so far.
      * @param multiplierDuration Which duration should be added for each failed attempt.
      */

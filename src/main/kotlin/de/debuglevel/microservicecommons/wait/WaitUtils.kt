@@ -7,51 +7,57 @@ import java.time.temporal.ChronoUnit
 object WaitUtils {
     private val logger = KotlinLogging.logger {}
 
-    private val lastRequests = mutableMapOf<Any, LocalDateTime>()
+    private val lastCalls = mutableMapOf<Any, LocalDateTime>()
 
     /**
-     * Waits until the next request is permitted to be made.
-     * @param requester The object which executes the request
-     * @param waitBetweenRequestsNanoseconds How long to wait between to requests.
+     * Waits (at most [waitBetweenCallsNanoseconds]) until [caller] permitted to make the next call.
+     * @param caller The object which executes the call
+     * @param waitBetweenCallsNanoseconds How long to wait between to calls.
      */
-    fun waitForNextRequestAllowed(requester: Any, waitBetweenRequestsNanoseconds: Long) {
-        logger.trace { "Waiting until next request to '$requester' is allowed..." }
+    fun waitForNextCallAllowed(
+        caller: Any,
+        waitBetweenCallsNanoseconds: Long,
+    ) {
+        logger.trace { "Waiting until next call to '$caller' is allowed..." }
 
-        val lastRequest = lastRequests[requester]
-        waitForNextRequestAllowed(lastRequest, waitBetweenRequestsNanoseconds)
+        val lastCall = lastCalls[caller]
+        waitForNextCallAllowed(lastCall, waitBetweenCallsNanoseconds)
 
-        logger.trace { "Waited until next request to '$requester' is allowed" }
+        logger.trace { "Waited until next call to '$caller' is allowed" }
     }
 
     /**
-     * Waits until the next request is permitted to be made.
-     * @param lastRequestOn When the last request was made.
-     * @param waitBetweenRequestsNanoseconds How long to wait between to requests.
+     * Waits [waitBetweenCallsNanoseconds] from [lastCallOn] until the next call is permitted to be made.
+     * @param lastCallOn When the last call was made.
+     * @param waitBetweenCallsNanoseconds How long to wait between two calls.
      */
-    fun waitForNextRequestAllowed(lastRequestOn: LocalDateTime?, waitBetweenRequestsNanoseconds: Long) {
-        logger.trace { "Waiting until next request is allowed..." }
+    fun waitForNextCallAllowed(
+        lastCallOn: LocalDateTime?,
+        waitBetweenCallsNanoseconds: Long,
+    ) {
+        logger.trace { "Waiting until next call is allowed..." }
 
-        if (lastRequestOn != null) {
-            val nextRequestDateTime = lastRequestOn.plusNanos(waitBetweenRequestsNanoseconds)
-            val waitingTimeMilliseconds = ChronoUnit.MILLIS.between(LocalDateTime.now(), nextRequestDateTime)
+        if (lastCallOn != null) {
+            val nextCallDateTime = lastCallOn.plusNanos(waitBetweenCallsNanoseconds)
+            val waitingTimeMilliseconds = ChronoUnit.MILLIS.between(LocalDateTime.now(), nextCallDateTime)
 
-            logger.trace { "Last request was on $lastRequestOn, waiting duration between requests is ${waitBetweenRequestsNanoseconds}ns, next request is on $nextRequestDateTime, waiting time is ${waitingTimeMilliseconds}ms" }
+            logger.trace { "Last call was on $lastCallOn, waiting duration between calls is ${waitBetweenCallsNanoseconds}ns, next call is on $nextCallDateTime, waiting time is ${waitingTimeMilliseconds}ms" }
 
             if (waitingTimeMilliseconds > 0) {
-                logger.debug { "Sleeping ${waitingTimeMilliseconds}ms until the next request is allowed..." }
+                logger.debug { "Sleeping ${waitingTimeMilliseconds}ms until the next call is allowed..." }
                 Thread.sleep(waitingTimeMilliseconds)
             }
         }
 
-        logger.trace { "Waited until next request is allowed" }
+        logger.trace { "Waited until next call is allowed" }
     }
 
     /**
-     * Sets the last request DateTime for an object to now()
-     * This should be called right after the request is finished.
-     * @param requester The object which executes the request
+     * Sets the last call DateTime for an [caller] to now().
+     * This should be called right after the call was finished.
+     * @param caller The object which executes the call
      */
-    fun setLastRequestDateTime(requester: Any) {
-        lastRequests[requester] = LocalDateTime.now()
+    fun setLastRequestDateTime(caller: Any) {
+        lastCalls[caller] = LocalDateTime.now()
     }
 }
