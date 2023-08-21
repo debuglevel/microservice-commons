@@ -2,7 +2,6 @@ package de.debuglevel.microservicecommons.statistics
 
 import mu.KotlinLogging
 import kotlin.time.Duration
-import kotlin.time.ExperimentalTime
 
 object CallDurationRecorder {
     private val logger = KotlinLogging.logger {}
@@ -17,7 +16,6 @@ object CallDurationRecorder {
      * calls (e.g. "POST /foobar", "default", "call to Google API" or null)
      * and returns the summarizing [CallDuration] object.
      */
-    @ExperimentalTime
     fun record(
         caller: Any,
         scope: Any?,
@@ -31,8 +29,8 @@ object CallDurationRecorder {
 
         val oldDurationSum = callDuration.durationSum
         callDuration.durationSum = when (oldDurationSum) {
-            null -> duration.inSeconds
-            else -> oldDurationSum + duration.inSeconds
+            null -> duration.toDouble(kotlin.time.DurationUnit.SECONDS)
+            else -> oldDurationSum + duration.toDouble(kotlin.time.DurationUnit.SECONDS)
         }
         callDuration.calls += 1
 
